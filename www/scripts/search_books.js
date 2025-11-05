@@ -48,6 +48,12 @@ class Library {
         const card = document.createElement("div");
         card.classList.add("book-card");
 
+        card.onclick = () => {
+          window.location.href = `./book.html?id=${book.id}`;
+        };
+        card.style.cursor = "pointer";
+
+
         const img = document.createElement("img");
         img.src = book.image || "no-cover.png"; // imagem padrão se faltar
         img.alt = book.title;
