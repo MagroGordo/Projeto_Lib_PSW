@@ -1,27 +1,248 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;500;600;700&display=swap');
+
+/* ========================================
+   VARIÃVEIS GLOBAIS
+   ======================================== */
 :root {
     --primary: #0056A4;
+    --primary-hover: #004080;
+    --primary-light: #e6f2ff;
     --primary-foreground: #ffffff;
     --secondary-foreground: #000000;
     --muted: #f2f2f2;
     --muted-foreground: #747474;
     --border: #c0c0c0;
+    --border-light: #e0e0e0;
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    --shadow-lg: 0px 0px 6px var(--border);
+    --shadow-hover: 0 8px 24px rgba(0,0,0,0.12);
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.4s ease;
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-full: 50%;
+}
+
+/* ========================================
+   RESET E ESTILOS BASE
+   ======================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-    font-family: 'Maven Pro', sans-serif;
-    padding: 0px 20px 0px 20px;
-    background-color: var(--primary-foreground);
+    font-family: 'Fira Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    padding: 0px 20px;
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-h1, h2 {
+h1, h2, h3, h4, h5, h6 {
     color: var(--secondary-foreground);
+    font-weight: 700;
 }
 
+a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+a:hover {
+    color: var(--primary-hover);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* ========================================
+   ANIMAÇÕES E KEYFRAMES
+   ======================================== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInFromLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.slide-in {
+    animation: slideInFromLeft 0.5s ease-out;
+}
+
+/* ========================================
+   BOTÕES GLOBAIS
+   ======================================== */
+.btn {
+    padding: 12px 28px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    position: relative;
+    overflow: hidden;
+    outline: none;
+}
+
+.btn:focus {
+    box-shadow: 0 0 0 3px rgba(0, 86, 164, 0.2);
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: var(--primary-hover);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background-color: var(--primary-foreground);
+    color: #333;
+    border: 1px solid var(--border);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background-color: var(--muted);
+    border-color: var(--primary);
+}
+
+.btn-outline {
+    background-color: transparent;
+    color: var(--primary);
+    border: 2px solid var(--primary);
+}
+
+.btn-outline:hover:not(:disabled) {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+}
+
+.btn-small {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+}
+
+.btn-large {
+    padding: 16px 36px;
+    font-size: 1.05rem;
+}
+
+/* Loading button state */
+.btn-loading {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.btn-loading::after {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+/* ========================================
+   PÁGINA DE DESCOBERTA (DISCOVERY)
+   ======================================== */
 .genre-section {
     margin-bottom: 40px;
+    animation: fadeIn 0.6s ease-out;
 }
 
-/* GRID de 4 colunas */
+.genre-section h2 {
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.genre-section h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background-color: var(--primary);
+    border-radius: 2px;
+}
+
 .books-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -33,23 +254,58 @@ h1, h2 {
     width: fit-content;
     height: fit-content;
     background: var(--primary-foreground);
-    border-radius: 8px;
-    box-shadow: 0px 0px 6px var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
     padding: 10px;
     text-align: left;
+    transition: all var(--transition-normal);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.book-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(0, 86, 164, 0.1) 0%, transparent 100%);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+}
+
+.book-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-hover);
+}
+
+.book-card:hover::before {
+    opacity: 1;
 }
 
 .book-card img {
     width: 400px;
     height: 565px;
     object-fit: fill;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
+    transition: transform var(--transition-normal);
+}
+
+.book-card:hover img {
+    transform: scale(1.02);
 }
 
 .book-card h3 {
     margin: 10px 0 5px 0;
     font-size: 1.1em;
     color: #222;
+    transition: color var(--transition-fast);
+}
+
+.book-card:hover h3 {
+    color: var(--primary);
 }
 
 .book-card p {
@@ -58,21 +314,41 @@ h1, h2 {
     font-size: 0.9em;
 }
 
-/* Estilos da página de descoberta */
+/* Skeleton loading para cards */
+.book-card-skeleton {
+    background: linear-gradient(
+        90deg,
+        #f0f0f0 25%,
+        #e0e0e0 50%,
+        #f0f0f0 75%
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite;
+}
+
+/* Hero Section */
 .hero-section {
     text-align: center;
     padding: 60px 20px;
+    animation: fadeIn 0.8s ease-out;
 }
 
 .icon {
     width: 70px;
     height: 70px;
     background-color: var(--primary);
-    border-radius: 50%;
+    border-radius: var(--radius-full);
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 30px;
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-normal);
+}
+
+.icon:hover {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: var(--shadow-lg);
 }
 
 .icon svg {
@@ -85,6 +361,10 @@ h1 {
     font-size: 2.5rem;
     margin-bottom: 20px;
     font-weight: 700;
+    background: linear-gradient(135deg, var(--secondary-foreground) 0%, var(--primary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .subtitle {
@@ -92,6 +372,9 @@ h1 {
     font-size: 1rem;
     margin-bottom: 35px;
     line-height: 1.5;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .button-group {
@@ -99,38 +382,10 @@ h1 {
     gap: 15px;
     justify-content: center;
     margin-bottom: 60px;
+    flex-wrap: wrap;
 }
 
-.btn {
-    padding: 12px 28px;
-    font-size: 0.95rem;
-    font-weight: 500;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.btn-primary {
-    background-color: var(--primary);
-    color: var(--primary-foreground);
-}
-
-.btn-primary:hover {
-    background-color: #004080;
-}
-
-.btn-secondary {
-    background-color: var(--primary-foreground);
-    color: var(--muted-foreground);
-    border: 1px solid var(--border);
-}
-
-.btn-secondary:hover {
-    background-color: var(--muted);
-    border-color: var(--border);
-}
-
+/* Feature Cards */
 .feature-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -142,33 +397,61 @@ h1 {
 .feature-card {
     background-color: var(--primary-foreground);
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     padding: 35px 25px;
     text-align: center;
-    transition: all 0.3s ease;
+    transition: all var(--transition-normal);
+    position: relative;
+    overflow: hidden;
+}
+
+.feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 86, 164, 0.05), transparent);
+    transition: left var(--transition-slow);
+}
+
+.feature-card:hover::before {
+    left: 100%;
 }
 
 .feature-card:hover {
     border-color: var(--primary);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow-md);
     transform: translateY(-5px);
 }
 
 .card-icon {
     width: 50px;
     height: 50px;
-    background-color: #e6f2ff;
-    border-radius: 50%;
+    background-color: var(--primary-light);
+    border-radius: var(--radius-full);
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 20px;
+    transition: all var(--transition-normal);
+}
+
+.feature-card:hover .card-icon {
+    transform: scale(1.1);
+    background-color: var(--primary);
 }
 
 .card-icon svg {
     width: 24px;
     height: 24px;
     fill: var(--primary);
+    transition: fill var(--transition-fast);
+}
+
+.feature-card:hover .card-icon svg {
+    fill: var(--primary-foreground);
 }
 
 .feature-card h3 {
@@ -184,37 +467,691 @@ h1 {
     line-height: 1.6;
 }
 
-/* Responsividade */
+/* ========================================
+   PÁGINA DE DETALHES DO LIVRO (BOOK.HTML)
+   ======================================== */
+
+/* Link de voltar */
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #666;
+    text-decoration: none;
+    margin-bottom: 20px;
+    font-size: 14px;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+}
+
+.back-link:hover {
+    color: var(--primary);
+    background-color: var(--primary-light);
+    transform: translateX(-4px);
+}
+
+.back-link::before {
+    content: '←';
+    font-size: 16px;
+}
+
+/* Detalhes do livro */
+.book-details {
+    display: flex;
+    gap: 40px;
+    background: white;
+    padding: 40px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 30px;
+    animation: slideInFromLeft 0.6s ease-out;
+}
+
+.book-cover {
+    flex-shrink: 0;
+    width: 350px;
+}
+
+.book-cover img {
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+    transition: transform var(--transition-normal);
+}
+
+.book-cover:hover img {
+    transform: scale(1.03);
+}
+
+.book-info {
+    flex: 1;
+    animation: fadeIn 0.8s ease-out 0.2s both;
+}
+
+.book-title {
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #000;
+    line-height: 1.2;
+}
+
+.book-author {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 15px;
+    font-style: italic;
+}
+
+.book-rating {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.rating-stars {
+    color: #ffc107;
+    font-size: 18px;
+    letter-spacing: 2px;
+}
+
+.rating-text {
+    color: #666;
+    font-size: 14px;
+}
+
+.book-genre {
+    display: inline-block;
+    background: #e9ecef;
+    font-weight: bold;
+    padding: 6px 14px;
+    border-radius: var(--radius-lg);
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #495057;
+    margin-bottom: 20px;
+    transition: all var(--transition-fast);
+}
+
+.book-genre:hover {
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
+.book-description {
+    color: #555;
+    margin-bottom: 25px;
+    line-height: 1.8;
+    font-size: 15px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+/* Informações extra do livro */
+.book-extra-info {
+    background: white;
+    padding: 20px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-light);
+    min-height: 150px;
+    transition: box-shadow var(--transition-fast);
+}
+
+.book-extra-info:hover {
+    box-shadow: var(--shadow-sm);
+}
+
+.book-extra-info p {
+    margin: 0;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 15px;
+    color: #444;
+    transition: background-color var(--transition-fast);
+}
+
+.book-extra-info p:hover {
+    background-color: #fafafa;
+    padding-left: 10px;
+}
+
+.book-extra-info p:last-child {
+    border-bottom: none;
+}
+
+.book-extra-info strong {
+    color: #111;
+    font-weight: 600;
+}
+
+/* ========================================
+   SEÇÃO DE REVIEWS
+   ======================================== */
+.reviews-section {
+    background: white;
+    padding: 40px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    animation: fadeIn 0.8s ease-out 0.4s both;
+}
+
+.reviews-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    position: relative;
+    padding-bottom: 15px;
+}
+
+.reviews-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 80px;
+    height: 3px;
+    background-color: var(--primary);
+    border-radius: 2px;
+}
+
+.review-box {
+    border: 1px solid #e8e8e8;
+    border-radius: var(--radius-md);
+    padding: 24px;
+    margin-bottom: 16px;
+    background: #fafafa;
+    transition: all var(--transition-normal);
+    position: relative;
+}
+
+.review-box::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--primary);
+    border-radius: 2px 0 0 2px;
+    transform: scaleY(0);
+    transition: transform var(--transition-normal);
+}
+
+.review-box:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transform: translateX(4px);
+}
+
+.review-box:hover::before {
+    transform: scaleY(1);
+}
+
+.review-box:last-child {
+    margin-bottom: 0;
+}
+
+.review-header-line {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.review-username {
+    font-weight: 600;
+    font-size: 15px;
+    color: #000;
+    transition: color var(--transition-fast);
+}
+
+.review-box:hover .review-username {
+    color: var(--primary);
+}
+
+.review-stars {
+    color: #ffc107;
+    font-weight: bold;
+    font-size: 14px;
+    letter-spacing: 1px;
+}
+
+.review-date {
+    font-size: 13px;
+    color: #999;
+    margin-left: auto;
+}
+
+.review-text {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.7;
+    font-weight: 400;
+}
+
+/* ========================================
+   COMPONENTES UTILITÁRIOS
+   ======================================== */
+
+/* Badge */
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: var(--radius-lg);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.badge-primary {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+}
+
+.badge-secondary {
+    background-color: var(--muted);
+    color: var(--muted-foreground);
+}
+
+/* Divider */
+.divider {
+    height: 1px;
+    background-color: var(--border-light);
+    margin: 30px 0;
+}
+
+/* Loading Spinner */
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--muted);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto;
+}
+
+/* Alert/Notification */
+.alert {
+    padding: 16px 20px;
+    border-radius: var(--radius-md);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.alert-info {
+    background-color: #e7f3ff;
+    border: 1px solid #b3d9ff;
+    color: #004085;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    border: 1px solid #ffeeba;
+    color: #856404;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
+
+/* Tooltip */
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 12px;
+    background-color: #333;
+    color: white;
+    font-size: 12px;
+    white-space: nowrap;
+    border-radius: var(--radius-sm);
+    margin-bottom: 5px;
+    z-index: 1000;
+}
+
+/* Modal overlay helper */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: var(--radius-md);
+    max-width: 500px;
+    width: 90%;
+    box-shadow: var(--shadow-lg);
+    animation: slideInFromLeft 0.3s ease-out;
+}
+
+/* ========================================
+   PÁGINAS DE AUTENTICAÇÃO (LOGIN/SIGNUP)
+   ======================================== */
+
+/* Página de autenticação */
+.auth-page {
+    background-color: #e8e8e8;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 450px;
+    padding: 20px;
+}
+
+.auth-box {
+    background: white;
+    border-radius: 16px;
+    padding: 40px 35px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Ícone do logo */
+.auth-icon {
+    width: 60px;
+    height: 60px;
+    background-color: var(--primary);
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+}
+
+.auth-icon svg {
+    width: 30px;
+    height: 30px;
+    fill: white;
+}
+
+/* Títulos */
+.auth-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 8px;
+}
+
+.auth-subtitle {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+/* Formulário */
+.auth-form {
+    text-align: left;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #000;
+    margin-bottom: 8px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 14px;
+    border: 1px solid #d0d0d0;
+    border-radius: 6px;
+    outline: none;
+    transition: all var(--transition-fast);
+    font-family: inherit;
+    background-color: white;
+}
+
+.form-group input::placeholder {
+    color: #999;
+}
+
+.form-group input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(0, 86, 164, 0.1);
+}
+
+/* Link "Forgot Password" */
+.forgot-password {
+    display: block;
+    text-align: right;
+    font-size: 12px;
+    color: #666;
+    margin-top: 6px;
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.forgot-password:hover {
+    color: var(--primary);
+}
+
+/* Botão full width */
+.btn-full {
+    width: 100%;
+    margin-top: 10px;
+    padding: 13px 28px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+/* Link para sign up/login */
+.auth-link {
+    text-align: center;
+    font-size: 13px;
+    color: #666;
+    margin-top: 25px;
+}
+
+.auth-link a {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.auth-link a:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+}
+
+/* Responsividade para auth pages */
+@media (max-width: 480px) {
+    .auth-box {
+        padding: 30px 25px;
+    }
+
+    .auth-title {
+        font-size: 22px;
+    }
+
+    .auth-subtitle {
+        font-size: 13px;
+    }
+}
+
+/* ========================================
+   ESTADOS DE FOCUS (Acessibilidade)
+   ======================================== */
+*:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+}
+
+/* ========================================
+   SCROLLBAR CUSTOMIZADA
+   ======================================== */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--muted);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+}
+
+/* ========================================
+   RESPONSIVIDADE
+   ======================================== */
 @media (max-width: 768px) {
+    /* Discovery page */
     h1 {
         font-size: 2rem;
     }
 
     .button-group {
         flex-direction: column;
-        align-items: center;
-    }
-
-    .btn {
-        width: 200px;
+        align-items: stretch;
     }
 
     .books-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
     }
 
     .book-card img {
         width: 100%;
         height: auto;
     }
+
+    /* Book details page */
+    .book-details {
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .book-cover {
+        width: 100%;
+    }
+
+    .book-cover img {
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+        display: block;
+    }
+
+    .book-title {
+        font-size: 28px;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .reviews-section {
+        padding: 20px;
+    }
 }
 
 @media (max-width: 480px) {
+    body {
+        padding: 0 10px;
+    }
+
     .books-grid {
         grid-template-columns: 1fr;
     }
     
     .feature-cards {
         grid-template-columns: 1fr;
+    }
+
+    .book-title {
+        font-size: 24px;
+    }
+
+    h1 {
+        font-size: 1.75rem;
+    }
+
+    .hero-section {
+        padding: 40px 15px;
+    }
+}
+
+/* ========================================
+   IMPRESSÃO
+   ======================================== */
+@media print {
+    .btn,
+    .back-link,
+    .action-buttons {
+        display: none;
+    }
+
+    .book-details,
+    .reviews-section {
+        box-shadow: none;
+        border: 1px solid #ddd;
     }
 }

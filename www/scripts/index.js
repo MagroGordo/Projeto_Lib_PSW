@@ -1,7 +1,12 @@
 "use strict";
 
-let btnClicked = document.querySelector(".btn-primary");
+let btnStartNow = document.querySelector(".btn-primary");
+let btnLogIn = document.querySelector(".btn-secondary");
 
-btnClicked.addEventListener("click", function() {
-    window.location.href = "./search_books.html";
+btnStartNow.addEventListener("click", function() {
+    window.location.href = "./signup.html";
+});
+
+btnLogIn.addEventListener("click", function() {
+    window.location.href = "./login.html";
 });
