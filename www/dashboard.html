@@ -1,11 +1,57 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Bookstore</title>
+    <link rel="stylesheet" href="./styles/style.css">
 </head>
 <body>
-  
+    <!-- Dashboard Content -->
+    <div class="container dashboard-container">
+        <!-- Header com saudação -->
+        <div class="dashboard-header">
+            <div class="user-avatar">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+            </div>
+            <div class="user-greeting">
+                <h1 id="user-greeting">Welcome Back!</h1>
+                <p class="subtitle">Continue your reading journey</p>
+            </div>
+            <button class="btn btn-primary" id="search-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                Search Books
+            </button>
+            <button class="btn btn-secondary" id="logout-btn">
+                Log Out
+            </button>
+        </div>
+
+        <!-- Seus favoritos -->
+        <div class="favorites-section">
+            <div class="section-header-flex">
+                <h2>Favorite Books</h2>
+            </div>
+            
+            <div class="favorites-grid" id="favorites-books">
+            </div>
+        </div>
+
+        <div class="favorites-section">
+            <div class="section-header-flex">
+                <h2>Read Books</h2>
+            </div>
+
+            <div class="favorites-grid" id="read-books">
+            </div>
+        </div>
+    </div>
+
+    <script src="./scripts/dashboard.js"></script>
 </body>
 </html>

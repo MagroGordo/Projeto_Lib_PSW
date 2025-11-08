@@ -1,7 +1,9 @@
-document.addEventListener("DOMContentLoaded", () => {
+"use strict";
+
+document.addEventListener("DOMContentLoaded", function () {
   const form = document.querySelector(".auth-form");
 
-  form.addEventListener("submit", async (e) => {
+  form.addEventListener("submit", function (e) {
     e.preventDefault();
 
     const username = document.querySelector("#username").value.trim();
@@ -9,36 +11,64 @@ document.addEventListener("DOMContentLoaded", () => {
     const password = document.querySelector("#password").value.trim();
     const confirm = document.querySelector("#confirm-password").value.trim();
 
+    // Verificações básicas
     if (!username || !email || !password || !confirm) {
       alert("Preenche todos os campos!");
       return;
     }
 
+    // Validar email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert("Formato de email inválido!");
+      return;
+    }
+
+    // Confirmar password
     if (password !== confirm) {
       alert("As passwords não coincidem!");
       return;
     }
 
-    try {
-      const res = await fetch("/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, password })
-      });
+    // Criar requisição AJAX
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "/signup", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
 
-      const data = await res.json();
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4) {
+        try {
+          const data = JSON.parse(xhr.responseText);
 
-      if (data.message === "ok") {
-        alert("Conta criada com sucesso!");
-        window.location.href = "login.html";
-      } else if (data.message === "user_exists") {
-        alert("Esse utilizador ou email já existe!");
-      } else {
-        alert("Erro ao criar conta. Verifica os dados e tenta novamente.");
+          if (xhr.status === 200 && data.message === "ok") {
+            alert("Conta criada com sucesso!");
+            // Login automático (server já cria sessão)
+            window.location.replace("./dashboard.html");
+          } else if (data.message === "user_exists") {
+            alert("Esse email já está registado!");
+          } else if (data.message === "invalid_email") {
+            alert("Formato de email inválido!");
+          } else if (data.message === "missing_fields") {
+            alert("Preenche todos os campos!");
+          } else {
+            alert("Erro ao criar conta. Tenta novamente.");
+          }
+        } catch (e) {
+          console.error("Erro ao interpretar resposta:", e);
+          alert("Erro inesperado no servidor.");
+        }
       }
-    } catch (err) {
-      console.error("Erro:", err);
-      alert("Erro inesperado. Tenta novamente mais tarde.");
-    }
+    };
+
+    xhr.onerror = function () {
+      alert("Erro de rede. Verifica a ligação e tenta novamente.");
+    };
+
+    const body = JSON.stringify({
+      username: username,
+      email: email,
+      password: password,
+    });
+    xhr.send(body);
   });
 });

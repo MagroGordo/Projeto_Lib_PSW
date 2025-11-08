@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(session({
-  secret: "suerp_hiper_mega_ultra_escondido_invisivel_segredo",
+  secret: "super_hiper_mega_ultra_escondido_invisivel_segredo",
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -38,6 +38,10 @@ app.get("/logout", handler.logout);
 app.get("/books", isLoggedIn, handler.getBooks);
 app.get("/books/:id", isLoggedIn, handler.getBook);
 app.get("/ratings/:book_id", isLoggedIn, handler.getRatings);
+app.get("/books/:book_id/status", isLoggedIn, handler.getBookStatus);
+app.post("/books/:book_id/toggle-read", isLoggedIn, handler.toggleReadStatus);
+app.post("/books/:book_id/toggle-favorite", isLoggedIn, handler.toggleFavoriteStatus);
+app.get("/dashboard", isLoggedIn, handler.getUserDashboard);
 
 //páginas bloqueadas para se não tiver sessão iniciada
 app.get("/dashboard.html", isLoggedIn, (req, res) => {
