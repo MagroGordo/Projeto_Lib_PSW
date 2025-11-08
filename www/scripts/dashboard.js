@@ -14,6 +14,10 @@ window.onload = () => {
     window.location.href = "./search_books.html";
   };
 
+  document.getElementById("stats-btn").onclick = () => {
+    window.location.href = "./statistics.html";
+  };
+
   // Botão de logout → termina sessão e volta ao login
   const logoutBtn = document.getElementById("logout-btn");
   if (logoutBtn) {

@@ -333,6 +333,65 @@ module.exports.getRatings = (req, res) => {
 };
 
 /**
+ * Adiciona uma review
+ */
+module.exports.addBookReview = (req, res) => {
+  const userId = req.session.loggedUser?.id;
+  const { book_id } = req.params;
+  const { rating, comment } = req.body;
+
+  if (!userId) return res.json({ message: "not_logged" });
+  if (!rating || !comment) return res.json({ message: "missing_fields" });
+
+  const conn = getConnection();
+
+  // Verifica se já fez review antes
+  conn.query(
+    "SELECT id FROM ratings WHERE user_id = ? AND book_id = ?",
+    [userId, book_id],
+    (errCheck, rows) => {
+      if (errCheck) {
+        console.error("❌ Erro ao verificar review:", errCheck);
+        conn.end();
+        return res.json({ message: "db_error" });
+      }
+
+      if (rows.length > 0) {
+        conn.end();
+        return res.json({ message: "already_reviewed" });
+      }
+
+      // Insere nova review
+      const sql =
+        "INSERT INTO ratings (user_id, book_id, rating, comment, created_at) VALUES (?, ?, ?, ?, NOW())";
+
+      conn.query(sql, [userId, book_id, rating, comment], (errInsert) => {
+        if (errInsert) {
+          console.error("❌ Erro ao inserir review:", errInsert);
+          conn.end();
+          return res.json({ message: "db_error" });
+        }
+
+        // Busca username para mostrar no retorno
+        conn.query(
+          "SELECT username FROM users WHERE id = ?",
+          [userId],
+          (errUser, resultUser) => {
+            conn.end();
+
+            const username = resultUser?.[0]?.username || "User";
+            res.json({
+              message: "ok",
+              data: { username },
+            });
+          }
+        );
+      });
+    }
+  );
+};
+
+/**
  * DASHBOARD — Retorna livros favoritos e lidos do utilizador autenticado
  */
 module.exports.getUserDashboard = (req, res) => {
@@ -380,5 +439,55 @@ module.exports.getUserDashboard = (req, res) => {
         read: readRows,
       });
     });
+  });
+};
+
+/**
+ * Retorna os 10 utilizadores com login mais recente
+ */
+module.exports.getTopRecentLogins = (req, res) => {
+  const conn = getConnection();
+  const sql = `
+    SELECT username, updated_at AS last_login
+    FROM users
+    WHERE updated_at IS NOT NULL
+    ORDER BY updated_at DESC
+    LIMIT 10;
+  `;
+
+  conn.query(sql, (err, rows) => {
+    conn.end();
+    if (err) {
+      console.error("❌ Erro ao buscar logins recentes:", err);
+      return res.json({ message: "db_error" });
+    }
+
+    res.json({ message: "ok", data: rows });
+  });
+};
+
+/**
+ * Retorna os 10 utilizadores com mais livros lidos
+ */
+module.exports.getTopReaders = (req, res) => {
+  const conn = getConnection();
+  const sql = `
+    SELECT u.username, COUNT(bus.book_id) AS read_count
+    FROM users u
+    JOIN books_users_status bus ON u.id = bus.user_id
+    WHERE bus.is_read = 1
+    GROUP BY u.id
+    ORDER BY read_count DESC
+    LIMIT 10;
+  `;
+
+  conn.query(sql, (err, rows) => {
+    conn.end();
+    if (err) {
+      console.error("❌ Erro ao buscar top leitores:", err);
+      return res.json({ message: "db_error" });
+    }
+
+    res.json({ message: "ok", data: rows });
   });
 };

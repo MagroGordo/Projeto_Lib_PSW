@@ -37,10 +37,14 @@ app.get("/logout", handler.logout);
 
 app.get("/books", isLoggedIn, handler.getBooks);
 app.get("/books/:id", isLoggedIn, handler.getBook);
-app.get("/ratings/:book_id", isLoggedIn, handler.getRatings);
 app.get("/books/:book_id/status", isLoggedIn, handler.getBookStatus);
 app.post("/books/:book_id/toggle-read", isLoggedIn, handler.toggleReadStatus);
 app.post("/books/:book_id/toggle-favorite", isLoggedIn, handler.toggleFavoriteStatus);
+app.get("/ratings/:book_id", isLoggedIn, handler.getRatings);
+app.post("/ratings/:book_id/add", isLoggedIn, handler.addBookReview);
+app.get("/users/top-recent-logins", isLoggedIn, handler.getTopRecentLogins);
+app.get("/users/top-readers", isLoggedIn, handler.getTopReaders);
+
 app.get("/dashboard", isLoggedIn, handler.getUserDashboard);
 
 //páginas bloqueadas para se não tiver sessão iniciada
@@ -50,11 +54,12 @@ app.get("/dashboard.html", isLoggedIn, (req, res) => {
 app.get("/search_books.html", isLoggedIn, (req, res) => {
   res.sendFile(__dirname + "/www/search_books.html");
 });
-app.get("/profile.html", isLoggedIn, (req, res) => {
-  res.sendFile(__dirname + "/www/profile.html");
-});
 app.get("/book.html", isLoggedIn, (req, res) => {
   res.sendFile(__dirname + "/www/book.html");
+});
+// Estatísticas (página e endpoints)
+app.get("/statistics.html", isLoggedIn, (req, res) => {
+  res.sendFile(__dirname + "/www/statistics.html");
 });
 
 //páginas de login/signup bloqueadas se já tiver sessão iniciada
