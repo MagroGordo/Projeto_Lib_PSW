@@ -2063,6 +2063,375 @@ h1 {
     }
 }
 
+/* ========================================
+   LANDING PAGE (INDEX.HTML)
+   ======================================== */
+
+/* Body da landing page */
+.landing-page {
+    background: linear-gradient(135deg, #e8f0f7 0%, #f5f5f5 50%, #e8f5e9 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+/* Container principal */
+.landing-container {
+    max-width: 1200px;
+    width: 100%;
+    text-align: center;
+    animation: fadeIn 0.8s ease-out;
+}
+
+/* Ícone principal (livro) */
+.landing-icon {
+    width: 100px;
+    height: 100px;
+    background: var(--primary);
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 40px;
+    box-shadow: 0 8px 32px rgba(0, 86, 164, 0.3);
+    animation: pulse 2s ease-in-out infinite;
+    transition: transform var(--transition-normal);
+}
+
+.landing-icon:hover {
+    transform: scale(1.1) rotate(5deg);
+    animation: none;
+}
+
+.landing-icon svg {
+    width: 50px;
+    height: 50px;
+    fill: white;
+}
+
+/* Título principal */
+.landing-title {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 20px;
+    line-height: 1.2;
+    animation: fadeIn 0.8s ease-out 0.2s both;
+}
+
+/* Subtítulo */
+.landing-subtitle {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 40px;
+    line-height: 1.6;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    animation: fadeIn 0.8s ease-out 0.4s both;
+}
+
+/* Botões de ação */
+.landing-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 80px;
+    flex-wrap: wrap;
+    animation: fadeIn 0.8s ease-out 0.6s both;
+}
+
+.landing-buttons .btn {
+    min-width: 180px;
+}
+
+/* Cards de funcionalidades */
+.landing-features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    max-width: 1000px;
+    margin: 0 auto 60px;
+    animation: fadeIn 0.8s ease-out 0.8s both;
+}
+
+.landing-feature-card {
+    background: white;
+    border-radius: var(--radius-md);
+    padding: 40px 30px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    transition: all var(--transition-normal);
+    position: relative;
+    overflow: hidden;
+}
+
+.landing-feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--primary);
+    transform: scaleX(0);
+    transition: transform var(--transition-normal);
+}
+
+.landing-feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+.landing-feature-card:hover::before {
+    transform: scaleX(1);
+}
+
+/* Ícones das funcionalidades */
+.feature-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+    transition: all var(--transition-normal);
+}
+
+.landing-feature-card:hover .feature-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.feature-icon svg {
+    width: 32px;
+    height: 32px;
+}
+
+/* Ícone de busca - Azul */
+.feature-icon-search {
+    background: #e3f2fd;
+}
+
+.feature-icon-search svg {
+    stroke: #1976d2;
+}
+
+/* Ícone de recomendações - Cyan */
+.feature-icon-recommend {
+    background: #e0f7fa;
+}
+
+.feature-icon-recommend svg {
+    stroke: #00acc1;
+}
+
+/* Ícone de progresso - Verde */
+.feature-icon-progress {
+    background: #e8f5e9;
+}
+
+.feature-icon-progress svg {
+    stroke: #43a047;
+}
+
+/* Texto dos cards */
+.landing-feature-card h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 12px;
+}
+
+.landing-feature-card p {
+    font-size: 0.95rem;
+    color: #666;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Footer */
+.landing-footer {
+    margin-top: 80px;
+    padding-top: 40px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.8s ease-out 1s both;
+}
+
+.landing-footer p {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+}
+
+.footer-links {
+    display: flex;
+    gap: 25px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.footer-links a {
+    color: #666;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color var(--transition-fast);
+}
+
+.footer-links a:hover {
+    color: var(--primary);
+}
+
+/* ========================================
+   RESPONSIVIDADE DA LANDING PAGE
+   ======================================== */
+
+@media (max-width: 992px) {
+    .landing-title {
+        font-size: 2.5rem;
+    }
+
+    .landing-subtitle {
+        font-size: 1rem;
+    }
+
+    .landing-features {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .landing-page {
+        padding: 30px 15px;
+    }
+
+    .landing-icon {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 30px;
+    }
+
+    .landing-icon svg {
+        width: 40px;
+        height: 40px;
+    }
+
+    .landing-title {
+        font-size: 2rem;
+        margin-bottom: 15px;
+    }
+
+    .landing-subtitle {
+        font-size: 0.95rem;
+        margin-bottom: 30px;
+    }
+
+    .landing-subtitle br {
+        display: none;
+    }
+
+    .landing-buttons {
+        margin-bottom: 60px;
+    }
+
+    .landing-features {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        margin-bottom: 50px;
+    }
+
+    .landing-feature-card {
+        padding: 30px 20px;
+    }
+
+    .feature-icon {
+        width: 60px;
+        height: 60px;
+    }
+
+    .feature-icon svg {
+        width: 28px;
+        height: 28px;
+    }
+
+    .landing-feature-card h3 {
+        font-size: 1.2rem;
+    }
+
+    .landing-feature-card p br {
+        display: none;
+    }
+
+    .landing-footer {
+        margin-top: 50px;
+        padding-top: 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .landing-title {
+        font-size: 1.75rem;
+    }
+
+    .landing-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .landing-buttons .btn {
+        width: 100%;
+    }
+
+    .footer-links {
+        flex-direction: column;
+        gap: 12px;
+    }
+}
+
+/* Animação especial para o gradiente de fundo */
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.landing-page {
+    background-size: 200% 200%;
+    animation: gradientShift 15s ease infinite;
+}
+
+/* Estados de hover nos botões */
+.landing-buttons .btn-primary {
+    position: relative;
+    overflow: hidden;
+}
+
+.landing-buttons .btn-primary::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.landing-buttons .btn-primary:hover::after {
+    width: 300px;
+    height: 300px;
+}
+
 /* Responsividade para auth pages */
 @media (max-width: 480px) {
     .auth-box {

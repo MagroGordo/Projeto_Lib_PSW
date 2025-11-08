@@ -3,12 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discover your new favorite book</title>
-    <script src="./scripts/index.js" defer></script>
-    <link rel="stylesheet" href="styles/style.css">
+    <title>Bookstore - Descubra seu próximo livro favorito</title>
+    <link rel="stylesheet" href="./styles/style.css">
 </head>
-<body>
-  <button class="btn btn-primary">Start Now</button>
-  <button class="btn btn-secondary">Log In</button>
+<body class="landing-page">
+    <!-- Conteúdo principal -->
+    <div class="landing-container">
+        <!-- Ícone principal -->
+        <div class="landing-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"/>
+            </svg>
+        </div>
+
+        <!-- Título e subtítulo -->
+        <h1 class="landing-title">Discover your next favorite book</h1>
+        <p class="landing-subtitle">
+            Explore millions of books and save your favorites, and receive<br>
+        </p>
+
+        <!-- Botões de ação -->
+        <div class="landing-buttons">
+            <a href="./signup.html" class="btn btn-primary btn-large">Começar agora</a>
+            <a href="/login.html" class="btn btn-secondary btn-large">Entrar</a>
+        </div>
+
+        <!-- Cards de funcionalidades -->
+        <div class="landing-features">
+            <!-- Card 1: Busca Avançada -->
+            <div class="landing-feature-card">
+                <div class="feature-icon feature-icon-search">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </div>
+                <h3>Busca Avançada</h3>
+                <p>Encontre livros por título,<br>autor, gênero ou ISBN</p>
+            </div>
+
+            <!-- Card 2: Recomendações -->
+            <div class="landing-feature-card">
+                <div class="feature-icon feature-icon-recommend">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                    </svg>
+                </div>
+                <h3>Recomendações</h3>
+                <p>Descubra novos livros<br>baseados em suas leituras</p>
+            </div>
+
+            <!-- Card 3: Acompanhe Progresso -->
+            <div class="landing-feature-card">
+                <div class="feature-icon feature-icon-progress">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                    </svg>
+                </div>
+                <h3>Acompanhe Progresso</h3>
+                <p>Mantenha registro de suas<br>leituras e metas</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="landing-footer">
+            <p>&copy; 2024 Bookstore. Todos os direitos reservados.</p>
+            <div class="footer-links">
+                <a href="/about.html">Sobre</a>
+                <a href="/privacy.html">Privacidade</a>
+                <a href="/terms.html">Termos</a>
+                <a href="/contact.html">Contato</a>
+            </div>
+        </footer>
+    </div>
+    <script src="./scripts/index.js"></script>
 </body>
 </html>
