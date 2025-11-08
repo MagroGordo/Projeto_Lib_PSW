@@ -18,6 +18,10 @@ window.onload = () => {
     window.location.href = "./statistics.html";
   };
 
+  document.getElementById("management-btn").onclick = () => {
+    window.location.href = "./manage.html";
+  }
+
   // Botão de logout → termina sessão e volta ao login
   const logoutBtn = document.getElementById("logout-btn");
   if (logoutBtn) {

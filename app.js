@@ -44,6 +44,10 @@ app.get("/ratings/:book_id", isLoggedIn, handler.getRatings);
 app.post("/ratings/:book_id/add", isLoggedIn, handler.addBookReview);
 app.get("/users/top-recent-logins", isLoggedIn, handler.getTopRecentLogins);
 app.get("/users/top-readers", isLoggedIn, handler.getTopReaders);
+app.post("/books/add", isLoggedIn, handler.addBook);
+app.post("/books/update/:id", isLoggedIn, handler.updateBook);
+app.post("/books/delete/:id", isLoggedIn, handler.deleteBook);
+app.get("/genres", isLoggedIn, handler.getGenres);
 
 app.get("/dashboard", isLoggedIn, handler.getUserDashboard);
 
@@ -60,6 +64,9 @@ app.get("/book.html", isLoggedIn, (req, res) => {
 // Estatísticas (página e endpoints)
 app.get("/statistics.html", isLoggedIn, (req, res) => {
   res.sendFile(__dirname + "/www/statistics.html");
+});
+app.get("/manage.html", isLoggedIn, (req, res) => {
+  res.sendFile(__dirname + "/www/manage.html");
 });
 
 //páginas de login/signup bloqueadas se já tiver sessão iniciada

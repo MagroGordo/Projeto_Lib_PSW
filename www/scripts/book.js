@@ -271,13 +271,33 @@ class BookPage {
     loadReviews = () => {
         var xhr = new XMLHttpRequest();
         xhr.open("GET", "/ratings/" + this.bookId, true);
-        xhr.onreadystatechange = function () {
-            if (this.readyState === 4 && this.status === 200) {
-                var result = JSON.parse(this.responseText);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var result = JSON.parse(xhr.responseText);
                 if (result.message !== "ok") return;
 
-                var container = document.getElementById("reviewsContainer");
+                const container = document.getElementById("reviewsContainer");
+                const ratingStars = document.getElementById("bookRatingStars");
+                const ratingText = document.getElementById("bookRatingText");
+
                 container.innerHTML = "";
+
+                if (result.data.length === 0) {
+                    // Nenhuma review
+                    ratingStars.textContent = "⭐ 0.0";
+                    ratingText.textContent = "(no reviews yet)";
+                    return;
+                }
+
+                // Calcular média das avaliações
+                const total = result.data.reduce((sum, r) => sum + r.rating, 0);
+                const avg = (total / result.data.length).toFixed(1);
+
+                // Atualizar no topo
+                ratingStars.textContent = `⭐ ${avg}`;
+                ratingText.textContent = `(${result.data.length} review${result.data.length > 1 ? "s" : ""})`;
+
+                // Mostrar cada review individual
                 result.data.forEach(review => {
                     const div = document.createElement("div");
                     div.classList.add("review-box");
@@ -293,10 +313,10 @@ class BookPage {
                 });
             }
         };
+        
         xhr.send();
     };
 }
-
 // Botão voltar
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelector(".back-link").onclick = (event) => {

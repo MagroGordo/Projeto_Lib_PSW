@@ -216,6 +216,18 @@ module.exports.getBookStatus = (req, res) => {
   });
 };
 
+module.exports.getGenres = (req, res) => {
+  const conn = getConnection();
+  conn.query("SELECT id, name FROM genres ORDER BY name ASC", (err, rows) => {
+    conn.end();
+    if (err) {
+      console.error("Error fetching genres:", err);
+      return res.json({ message: "db_error" });
+    }
+    res.json({ message: "ok", data: rows });
+  });
+};
+
 // Toggle "lido"
 // =============================
 // TOGGLE READ
@@ -489,5 +501,122 @@ module.exports.getTopReaders = (req, res) => {
     }
 
     res.json({ message: "ok", data: rows });
+  });
+};
+
+module.exports.addBook = (req, res) => {
+  const { title, author, isbn, year, genre, description, page_count, editor } = req.body;
+
+  if (!title || !author || !isbn || !year || !genre || !page_count || !editor) {
+    return res.json({ message: "missing_fields" });
+  }
+
+  const conn = getConnection();
+
+  // obter id do género pelo nome (ou adapta se já envias o id)
+  const genreSQL = "SELECT id FROM genres WHERE name = ?";
+  conn.query(genreSQL, [genre], (err, rows) => {
+    if (err) {
+      conn.end();
+      console.error("Error checking genre:", err);
+      return res.json({ message: "db_error" });
+    }
+
+    const genreId = rows.length > 0 ? rows[0].id : null;
+
+    const insertSQL = `
+      INSERT INTO books (
+        title, author, isbn, publication_year, genre_id, description, page_count, editor, image
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL)
+    `;
+
+    conn.query(
+      insertSQL,
+      [title, author, isbn, year, genreId, description, page_count, editor],
+      (err2, result) => {
+        if (err2) {
+          conn.end();
+          console.error("Error inserting book:", err2);
+          return res.json({ message: "db_error" });
+        }
+
+        // caminho automático: images/<id>.jpg
+        const imagePath = `images/${result.insertId}.jpg`;
+        const updateSQL = "UPDATE books SET image = ? WHERE id = ?";
+
+        conn.query(updateSQL, [imagePath, result.insertId], (err3) => {
+          conn.end();
+          if (err3) {
+            console.error("Error updating image path:", err3);
+            return res.json({ message: "db_error" });
+          }
+
+          res.json({ message: "ok", id: result.insertId, image: imagePath });
+        });
+      }
+    );
+  });
+};
+
+/**
+ * POST - Atualiza livro existente
+ */
+module.exports.updateBook = (req, res) => {
+  const { id } = req.params;
+  const { title, author, isbn, year, genre, description, page_count, editor } = req.body;
+
+  if (!title || !author || !isbn || !year || !genre || !page_count || !editor) {
+    return res.json({ message: "missing_fields" });
+  }
+
+  const conn = getConnection();
+
+  const genreSQL = "SELECT id FROM genres WHERE name = ?";
+  conn.query(genreSQL, [genre], (err, rows) => {
+    if (err) {
+      conn.end();
+      console.error("Error checking genre:", err);
+      return res.json({ message: "db_error" });
+    }
+
+    const genreId = rows.length > 0 ? rows[0].id : null;
+    const imagePath = `images/${id}.jpg`;
+
+    const updateSQL = `
+      UPDATE books
+      SET title=?, author=?, isbn=?, publication_year=?, genre_id=?, 
+          description=?, page_count=?, editor=?, image=?
+      WHERE id=?;
+    `;
+
+    conn.query(
+      updateSQL,
+      [title, author, isbn, year, genreId, description, page_count, editor, imagePath, id],
+      (err2) => {
+        conn.end();
+        if (err2) {
+          console.error("Error updating book:", err2);
+          return res.json({ message: "db_error" });
+        }
+        res.json({ message: "ok" });
+      }
+    );
+  });
+};
+
+/**
+ * POST - Elimina um livro
+ */
+module.exports.deleteBook = (req, res) => {
+  const { id } = req.params;
+  const conn = getConnection();
+
+  conn.query("DELETE FROM books WHERE id = ?", [id], (err) => {
+    conn.end();
+    if (err) {
+      console.error("Erro ao eliminar livro:", err);
+      return res.json({ message: "db_error" });
+    }
+    res.json({ message: "ok" });
   });
 };
