@@ -9,20 +9,17 @@ document.addEventListener("DOMContentLoaded", function () {
     const email = document.querySelector("#email").value.trim();
     const password = document.querySelector("#password").value.trim();
 
-    // Verificação básica
     if (!email || !password) {
-      alert("Preenche todos os campos!");
+      alert("Please fill in all fields!");
       return;
     }
 
-    // Validar formato de email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      alert("Formato de email inválido!");
+      alert("Invalid email format!");
       return;
     }
 
-    // Criar requisição AJAX
     const xhr = new XMLHttpRequest();
     xhr.open("POST", "/login", true);
     xhr.setRequestHeader("Content-Type", "application/json");
@@ -33,24 +30,20 @@ document.addEventListener("DOMContentLoaded", function () {
           const data = JSON.parse(xhr.responseText);
 
           if (xhr.status === 200 && data.message === "ok") {
-            alert("Bem-vindo de volta!");
+            alert("Welcome back!");
             window.location.replace("./dashboard.html");
           } else if (data.message === "invalid") {
-            alert("Credenciais inválidas. Tenta novamente.");
+            alert("Invalid credentials. Please try again.");
           } else if (data.message === "missing_fields") {
-            alert("Faltam campos obrigatórios.");
+            alert("Missing required fields.");
           } else {
-            alert("Erro no login. Verifica a ligação ou tenta novamente.");
+            alert("Error logging in. Please check your connection and try again.");
           }
         } catch (e) {
-          console.error("Erro ao interpretar resposta:", e);
-          alert("Erro inesperado no servidor.");
+          console.error("Error parsing response:", e);
+          alert("Unexpected server error.");
         }
       }
-    };
-
-    xhr.onerror = function () {
-      alert("Erro de rede. Verifica a ligação e tenta novamente.");
     };
 
     const body = JSON.stringify({ email: email, password: password });

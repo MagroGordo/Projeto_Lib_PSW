@@ -11,26 +11,22 @@ document.addEventListener("DOMContentLoaded", function () {
     const password = document.querySelector("#password").value.trim();
     const confirm = document.querySelector("#confirm-password").value.trim();
 
-    // Verificações básicas
     if (!username || !email || !password || !confirm) {
-      alert("Preenche todos os campos!");
+      alert("Please fill in all fields!");
       return;
     }
 
-    // Validar email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      alert("Formato de email inválido!");
+      alert("Invalid email format!");
       return;
     }
 
-    // Confirmar password
     if (password !== confirm) {
-      alert("As passwords não coincidem!");
+      alert("Passwords do not match!");
       return;
     }
 
-    // Criar requisição AJAX
     const xhr = new XMLHttpRequest();
     xhr.open("POST", "/signup", true);
     xhr.setRequestHeader("Content-Type", "application/json");
@@ -41,27 +37,26 @@ document.addEventListener("DOMContentLoaded", function () {
           const data = JSON.parse(xhr.responseText);
 
           if (xhr.status === 200 && data.message === "ok") {
-            alert("Conta criada com sucesso!");
-            // Login automático (server já cria sessão)
+            alert("Account created successfully");
             window.location.replace("./dashboard.html");
           } else if (data.message === "user_exists") {
-            alert("Esse email já está registado!");
+            alert("This email is already registered!");
           } else if (data.message === "invalid_email") {
-            alert("Formato de email inválido!");
+            alert("Invalid email format!");
           } else if (data.message === "missing_fields") {
-            alert("Preenche todos os campos!");
+            alert("Please fill in all fields!");
           } else {
-            alert("Erro ao criar conta. Tenta novamente.");
+            alert("Error creating account. Please try again.");
           }
         } catch (e) {
-          console.error("Erro ao interpretar resposta:", e);
-          alert("Erro inesperado no servidor.");
+          console.error("Error parsing response:", e);
+          alert("Unexpected server error.");
         }
       }
     };
 
     xhr.onerror = function () {
-      alert("Erro de rede. Verifica a ligação e tenta novamente.");
+      alert("Network error. Please check your connection and try again.");
     };
 
     const body = JSON.stringify({

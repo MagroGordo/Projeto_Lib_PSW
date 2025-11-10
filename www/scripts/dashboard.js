@@ -9,7 +9,6 @@ window.addEventListener("pageshow", function (event) {
 window.onload = () => {
   loadDashboard();
 
-  // Botão de pesquisa → redireciona para search_books.html
   document.getElementById("search-btn").onclick = () => {
     window.location.href = "./search_books.html";
   };
@@ -22,7 +21,6 @@ window.onload = () => {
     window.location.href = "./manage.html";
   }
 
-  // Botão de logout → termina sessão e volta ao login
   const logoutBtn = document.getElementById("logout-btn");
   if (logoutBtn) {
     logoutBtn.addEventListener("click", () => {
@@ -46,9 +44,6 @@ window.onload = () => {
   }
 };
 
-/**
- * Carrega livros favoritos e lidos do utilizador
- */
 function loadDashboard() {
   var xhr = new XMLHttpRequest();
   xhr.open("GET", "/dashboard", true);
@@ -69,9 +64,6 @@ function loadDashboard() {
   xhr.send();
 }
 
-/**
- * Mostra livros dentro de um container
- */
 function showBooks(books, containerId) {
   const container = document.getElementById(containerId);
   container.innerHTML = "";

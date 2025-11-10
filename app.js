@@ -5,7 +5,6 @@ const options = require("./scripts/options.json").server;
 const handler = require("./scripts/request-handlers");
 const app = express();
 
-//middlewares
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -14,23 +13,20 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    maxAge: 1000 * 60 * 60 * 24, // 24 horas
+    maxAge: 1000 * 60 * 60 * 24,
   }
 }));
 
-//verifica se tem sessão iniciada para páginas protegidas
 function isLoggedIn(req, res, next) {
   if (req.session.loggedUser) return next();
   return res.redirect("./login.html");
 }
 
-//verifica se já tem sessão iniciada para páginas de login/signup
 function alreadyLogged(req, res, next) {
   if (req.session.loggedUser) return res.redirect("./dashboard.html");
   return next();
 }
 
-//rotas
 app.post("/signup", handler.signup);
 app.post("/login", handler.login);
 app.get("/logout", handler.logout);
@@ -45,13 +41,12 @@ app.post("/ratings/:book_id/add", isLoggedIn, handler.addBookReview);
 app.get("/users/top-recent-logins", isLoggedIn, handler.getTopRecentLogins);
 app.get("/users/top-readers", isLoggedIn, handler.getTopReaders);
 app.post("/books/add", isLoggedIn, handler.addBook);
-app.post("/books/update/:id", isLoggedIn, handler.updateBook);
-app.post("/books/delete/:id", isLoggedIn, handler.deleteBook);
+app.put("/books/update/:id", isLoggedIn, handler.updateBook);
+app.delete("/books/delete/:id", isLoggedIn, handler.deleteBook);
 app.get("/genres", isLoggedIn, handler.getGenres);
 
 app.get("/dashboard", isLoggedIn, handler.getUserDashboard);
 
-//páginas bloqueadas para se não tiver sessão iniciada
 app.get("/dashboard.html", isLoggedIn, (req, res) => {
   res.sendFile(__dirname + "/www/dashboard.html");
 });
@@ -61,7 +56,6 @@ app.get("/search_books.html", isLoggedIn, (req, res) => {
 app.get("/book.html", isLoggedIn, (req, res) => {
   res.sendFile(__dirname + "/www/book.html");
 });
-// Estatísticas (página e endpoints)
 app.get("/statistics.html", isLoggedIn, (req, res) => {
   res.sendFile(__dirname + "/www/statistics.html");
 });
@@ -69,7 +63,6 @@ app.get("/manage.html", isLoggedIn, (req, res) => {
   res.sendFile(__dirname + "/www/manage.html");
 });
 
-//páginas de login/signup bloqueadas se já tiver sessão iniciada
 app.get("/login.html", alreadyLogged, (req, res) => {
   res.sendFile(__dirname + "/www/login.html");
 });

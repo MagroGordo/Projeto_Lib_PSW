@@ -10,7 +10,6 @@ class ManageBooks {
     this.booksList = document.getElementById("books-list");
     this.totalBooks = document.getElementById("total-books");
 
-    // Modal and form
     this.modal = document.getElementById("book-modal");
     this.form = document.getElementById("book-form");
     this.modalTitle = document.getElementById("modal-title");
@@ -18,7 +17,6 @@ class ManageBooks {
     this.deleteModal = document.getElementById("delete-modal");
     this.deleteBookName = document.getElementById("delete-book-name");
 
-    // Buttons
     this.addBookBtn = document.getElementById("add-book-btn");
     this.closeModalBtn = document.getElementById("close-modal");
     this.cancelBtn = document.getElementById("cancel-btn");
@@ -26,7 +24,6 @@ class ManageBooks {
     this.cancelDeleteBtn = document.getElementById("cancel-delete-btn");
     this.confirmDeleteBtn = document.getElementById("confirm-delete-btn");
 
-    // State
     this.currentEditId = null;
   }
 
@@ -43,9 +40,6 @@ class ManageBooks {
     this.form.onsubmit = this.saveBook;
   };
 
-  // =============================
-  // LOAD BOOKS
-  // =============================
   loadBooks = () => {
     const xhr = new XMLHttpRequest();
     xhr.open("GET", "/books", true);
@@ -97,9 +91,6 @@ class ManageBooks {
     );
   };
 
-  // =============================
-  // LOAD GENRES
-  // =============================
   loadGenres = () => {
     const xhr = new XMLHttpRequest();
     xhr.open("GET", "/genres", true);
@@ -121,9 +112,6 @@ class ManageBooks {
     xhr.send();
   };
 
-  // =============================
-  // NEW / EDIT MODAL
-  // =============================
   openNewBookModal = () => {
     this.modal.style.display = "flex";
     this.modalTitle.textContent = "New Book";
@@ -148,10 +136,8 @@ class ManageBooks {
           document.getElementById("book-isbn").value = b.isbn;
           document.getElementById("book-year").value = b.publication_year;
           document.getElementById("book-genre").value = b.genre_name;
-          document.getElementById("book-description").value =
-            b.description || "";
-          document.getElementById("book-pagecount").value =
-            b.page_count || "";
+          document.getElementById("book-description").value = b.description || "";
+          document.getElementById("book-pagecount").value = b.page_count || "";
           document.getElementById("book-editor").value = b.editor || "";
         }
       }
@@ -159,9 +145,6 @@ class ManageBooks {
     xhr.send();
   };
 
-  // =============================
-  // SAVE BOOK (ADD/UPDATE)
-  // =============================
   saveBook = (e) => {
     e.preventDefault();
 
@@ -186,9 +169,10 @@ class ManageBooks {
     const url = this.currentEditId
       ? `/books/update/${this.currentEditId}`
       : "/books/add";
+    const method = this.currentEditId ? "PUT" : "POST";
 
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", url, true);
+    xhr.open(method, url, true);
     xhr.setRequestHeader("Content-Type", "application/json");
 
     xhr.onreadystatechange = () => {
@@ -213,9 +197,6 @@ class ManageBooks {
     this.modal.style.display = "none";
   };
 
-  // =============================
-  // DELETE BOOK
-  // =============================
   openDeleteModal = (id, title) => {
     this.deleteModal.style.display = "flex";
     this.deleteBookName.textContent = title;
@@ -228,7 +209,7 @@ class ManageBooks {
 
   deleteBook = (id) => {
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", "/books/delete/" + id, true);
+    xhr.open("DELETE", "/books/delete/" + id, true);
     xhr.onreadystatechange = () => {
       if (xhr.readyState === 4 && xhr.status === 200) {
         const result = JSON.parse(xhr.responseText);

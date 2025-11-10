@@ -24,12 +24,11 @@ class Library {
 
     const grouped = {};
     this.books.forEach((book) => {
-      const genreName = book.genre || book.genre_name || "Sem género definido";
+      const genreName = book.genre || book.genre_name || "No genre assigned";
       if (!grouped[genreName]) grouped[genreName] = [];
       grouped[genreName].push(book);
     });
 
-    // Criar secção com título (h2) para cada género
     Object.keys(grouped)
       .sort()
       .forEach((genreName) => {
@@ -37,7 +36,7 @@ class Library {
         genreSection.classList.add("genre-section");
 
         const title = document.createElement("h2");
-        title.textContent = genreName; // 👉 aqui cria o h2 com o nome do género
+        title.textContent = genreName;
         genreSection.appendChild(title);
 
         const grid = document.createElement("div");

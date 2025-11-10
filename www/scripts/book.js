@@ -6,9 +6,6 @@ window.onload = () => {
     window.bookPage = bookPage;
 };
 
-/**
- * Classe responsável por gerir a página do livro
- */
 class BookPage {
 
     constructor() {
@@ -19,9 +16,6 @@ class BookPage {
         this.reviewFormVisible = false;
     }
 
-    /**
-     * Carrega dados do livro
-     */
     loadBook = () => {
         if (!this.bookId) {
             alert("Livro não encontrado.");
@@ -48,9 +42,6 @@ class BookPage {
         xhr.send();
     };
 
-    /**
-     * Mostra detalhes
-     */
     showBookDetails = (book) => {
         document.getElementById("bookCoverImage").src = book.image || "no-cover.png";
         document.getElementById("bookTitle").textContent = book.title;
@@ -65,9 +56,6 @@ class BookPage {
         `;
     };
 
-    /**
-     * Pede o estado atual do livro para o user logado
-     */
     loadStatus = () => {
         var xhr = new XMLHttpRequest();
         xhr.open("GET", `/books/${this.bookId}/status`, true);
@@ -86,9 +74,6 @@ class BookPage {
         xhr.send();
     };
 
-    /**
-     * Atualiza o botão "Mark as Read"
-     */
     updateReadButton = (isRead) => {
         if (isRead) {
             this.readBtn.classList.add("active");
@@ -99,9 +84,6 @@ class BookPage {
         }
     };
 
-    /**
-     * Atualiza o botão "Favorite"
-     */
     updateFavoriteButton = (isFav) => {
         if (isFav) {
             this.favoriteBtn.classList.add("active");
@@ -112,9 +94,6 @@ class BookPage {
         }
     };
 
-    /**
-     * Adiciona eventos
-     */
     addEventListeners = () => {
         this.readBtn.onclick = () => {
             var xhr = new XMLHttpRequest();
@@ -145,9 +124,6 @@ class BookPage {
         this.rateBtn.onclick = () => this.toggleReviewForm();
     };
 
-    /**
-     * Cria / alterna o formulário de review
-     */
     toggleReviewForm = () => {
         let wrapper = document.getElementById("reviewFormWrapper");
         const reviewsSection = document.querySelector(".reviews-section");
@@ -188,9 +164,6 @@ class BookPage {
         wrapper.style.display = this.reviewFormVisible ? "block" : "none";
     };
 
-    /**
-     * Liga eventos do formulário
-     */
     bindReviewFormEvents = () => {
         const form = document.getElementById("addReviewForm");
         const cancelBtn = document.getElementById("cancelReviewBtn");
@@ -198,7 +171,6 @@ class BookPage {
 
         if (!form) return;
 
-        // cancelar
         if (cancelBtn) {
             cancelBtn.onclick = () => {
                 if (wrapper) wrapper.style.display = "none";
@@ -206,14 +178,12 @@ class BookPage {
             };
         }
 
-        // enviar
         form.onsubmit = (e) => {
             e.preventDefault();
 
             const rating = parseFloat(document.getElementById("ratingInput").value);
             const comment = document.getElementById("commentInput").value.trim();
 
-            // ✅ Agora exige nota >= 1
             if (isNaN(rating) || rating < 1 || rating > 5) {
                 alert("Please enter a valid rating between 1 and 5.");
                 return;
@@ -265,9 +235,6 @@ class BookPage {
         };
     };
 
-    /**
-     * Carrega reviews
-     */
     loadReviews = () => {
         var xhr = new XMLHttpRequest();
         xhr.open("GET", "/ratings/" + this.bookId, true);
@@ -283,21 +250,17 @@ class BookPage {
                 container.innerHTML = "";
 
                 if (result.data.length === 0) {
-                    // Nenhuma review
                     ratingStars.textContent = "⭐ 0.0";
                     ratingText.textContent = "(no reviews yet)";
                     return;
                 }
 
-                // Calcular média das avaliações
                 const total = result.data.reduce((sum, r) => sum + r.rating, 0);
                 const avg = (total / result.data.length).toFixed(1);
 
-                // Atualizar no topo
                 ratingStars.textContent = `⭐ ${avg}`;
                 ratingText.textContent = `(${result.data.length} review${result.data.length > 1 ? "s" : ""})`;
 
-                // Mostrar cada review individual
                 result.data.forEach(review => {
                     const div = document.createElement("div");
                     div.classList.add("review-box");
@@ -317,7 +280,7 @@ class BookPage {
         xhr.send();
     };
 }
-// Botão voltar
+
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelector(".back-link").onclick = (event) => {
         event.preventDefault();
