@@ -86,7 +86,7 @@ class Library {
           response.data.forEach((current) => books.push(current));
           window.info.showBooksByGenre();
         } else {
-          console.error("Erro na resposta:", response);
+          console.error("Error:", response);
         }
       }
     };

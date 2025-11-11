@@ -18,7 +18,7 @@ class BookPage {
 
     loadBook = () => {
         if (!this.bookId) {
-            alert("Livro não encontrado.");
+            alert("Book not found.");
             return;
         }
 
@@ -29,7 +29,7 @@ class BookPage {
             if (xhr.readyState === 4 && xhr.status === 200) {
                 var result = JSON.parse(xhr.responseText);
                 if (result.message !== "ok" || result.data.length === 0) {
-                    alert("Livro não encontrado.");
+                    alert("Book not found.");
                     return;
                 }
 
@@ -47,12 +47,12 @@ class BookPage {
         document.getElementById("bookTitle").textContent = book.title;
         document.getElementById("bookAuthor").textContent = book.author;
         document.getElementById("bookGenre").textContent = book.genre_name || book.genre || "Sem género definido";
-        document.getElementById("bookDescription").textContent = book.description || "Sem descrição disponível.";
+        document.getElementById("bookDescription").textContent = book.description || "No description available.";
         document.getElementById("bookNotes").innerHTML = `
-            <p><strong>ISBN:</strong> ${book.isbn || "Não disponível"}</p>
-            <p><strong>Ano de Publicação:</strong> ${book.publication_year || "Desconhecido"}</p>
-            <p><strong>Número de Páginas:</strong> ${book.page_count || "N/A"}</p>
-            <p><strong>Editora:</strong> ${book.editor || "Não indicada"}</p>
+            <p><strong>ISBN:</strong> ${book.isbn || "Not available"}</p>
+            <p><strong>Publication Year:</strong> ${book.publication_year || "Unknown"}</p>
+            <p><strong>Page Count:</strong> ${book.page_count || "N/A"}</p>
+            <p><strong>Publisher:</strong> ${book.editor || "Not indicated"}</p>
         `;
     };
 
