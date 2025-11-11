@@ -14,12 +14,10 @@ function getConnection() {
 module.exports.signup = (req, res) => {
   const { username, email, password } = req.body;
 
-  // Verificar campos
   if (!username || !email || !password) {
     return res.json({ message: "missing_fields" });
   }
 
-  // Validar formato de email
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     return res.json({ message: "invalid_email" });
@@ -27,7 +25,6 @@ module.exports.signup = (req, res) => {
 
   const conn = getConnection();
 
-  // Verificar se email já existe
   const checkSQL = "SELECT id FROM users WHERE email = ?";
   conn.query(checkSQL, [email], (err, rows) => {
     if (err) {
@@ -41,7 +38,6 @@ module.exports.signup = (req, res) => {
       return res.json({ message: "user_exists" });
     }
 
-    // Encriptar password
     bcrypt.hash(password, 10, (err, hash) => {
       if (err) {
         console.error("Erro ao encriptar password:", err);
@@ -49,7 +45,6 @@ module.exports.signup = (req, res) => {
         return res.json({ message: "hash_error" });
       }
 
-      // Inserir novo user
       const insertSQL =
         "INSERT INTO users (username, email, password, created_at, updated_at) VALUES (?, ?, ?, NOW(), NOW())";
       conn.query(insertSQL, [username, email, hash], (err, result) => {
@@ -59,7 +54,6 @@ module.exports.signup = (req, res) => {
           return res.json({ message: "db_error" });
         }
 
-        // Login automático após registo
         req.session.loggedUser = { id: result.insertId, email: email };
         conn.end();
         res.json({ message: "ok" });
@@ -92,7 +86,6 @@ module.exports.login = (req, res) => {
 
     const user = rows[0];
 
-    // Comparar password
     bcrypt.compare(password, user.password, (err, valid) => {
       if (err) {
         console.error("Erro ao comparar password:", err);
@@ -105,14 +98,12 @@ module.exports.login = (req, res) => {
         return res.json({ message: "invalid" });
       }
 
-      // Criar sessão
       req.session.loggedUser = {
         id: user.id,
         email: user.email,
         username: user.username,
       };
 
-      // Atualizar data de último login
       const updateSQL = "UPDATE users SET updated_at = NOW() WHERE id = ?";
       conn.query(updateSQL, [user.id], (err2) => {
         if (err2) console.warn("Aviso ao atualizar data:", err2);
@@ -133,9 +124,6 @@ module.exports.logout = (req, res) => {
   });
 };
 
-/**
- * BUSCAR TODOS OS LIVROS (com nome do género)
- */
 module.exports.getBooks = (req, res) => {
   const conn = getConnection();
   const sql = `
@@ -158,9 +146,6 @@ module.exports.getBooks = (req, res) => {
   });
 };
 
-/**
- * BUSCAR UM LIVRO POR ID (com nome do género)
- */
 module.exports.getBook = (req, res) => {
   const conn = getConnection();
   const sql = `
@@ -183,7 +168,6 @@ module.exports.getBook = (req, res) => {
   });
 };
 
-// Estado atual (lido/favorito) para este user e livro
 module.exports.getBookStatus = (req, res) => {
   if (!req.session.loggedUser) return res.json({ message: "not_logged" });
 
@@ -205,7 +189,6 @@ module.exports.getBookStatus = (req, res) => {
     }
 
     if (rows.length === 0) {
-      // Nenhum registro ainda
       return res.json({
         message: "ok",
         data: { is_read: 0, is_favorite: 0 },
@@ -228,10 +211,6 @@ module.exports.getGenres = (req, res) => {
   });
 };
 
-// Toggle "lido"
-// =============================
-// TOGGLE READ
-// =============================
 module.exports.toggleReadStatus = (req, res) => {
   if (!req.session.loggedUser) return res.json({ message: "not_logged" });
   const conn = getConnection();
@@ -247,7 +226,6 @@ module.exports.toggleReadStatus = (req, res) => {
     }
 
     if (rows.length > 0) {
-      // Já existe, alternar valor
       const newVal = rows[0].is_read ? 0 : 1;
       conn.query(
         "UPDATE books_users_status SET is_read=? WHERE user_id=? AND book_id=?",
@@ -262,7 +240,6 @@ module.exports.toggleReadStatus = (req, res) => {
         }
       );
     } else {
-      // Não existe, inserir
       const insertSQL =
         "INSERT INTO books_users_status (user_id, book_id, is_read, is_favorite) VALUES (?, ?, 1, 0)";
       conn.query(insertSQL, [userId, bookId], (err3) => {
@@ -277,9 +254,6 @@ module.exports.toggleReadStatus = (req, res) => {
   });
 };
 
-// =============================
-// TOGGLE FAVORITE
-// =============================
 module.exports.toggleFavoriteStatus = (req, res) => {
   if (!req.session.loggedUser) return res.json({ message: "not_logged" });
 
@@ -344,9 +318,6 @@ module.exports.getRatings = (req, res) => {
   });
 };
 
-/**
- * Adiciona uma review
- */
 module.exports.addBookReview = (req, res) => {
   const userId = req.session.loggedUser?.id;
   const { book_id } = req.params;
@@ -357,7 +328,6 @@ module.exports.addBookReview = (req, res) => {
 
   const conn = getConnection();
 
-  // Verifica se já fez review antes
   conn.query(
     "SELECT id FROM ratings WHERE user_id = ? AND book_id = ?",
     [userId, book_id],
@@ -373,7 +343,6 @@ module.exports.addBookReview = (req, res) => {
         return res.json({ message: "already_reviewed" });
       }
 
-      // Insere nova review
       const sql =
         "INSERT INTO ratings (user_id, book_id, rating, comment, created_at) VALUES (?, ?, ?, ?, NOW())";
 
@@ -384,7 +353,6 @@ module.exports.addBookReview = (req, res) => {
           return res.json({ message: "db_error" });
         }
 
-        // Busca username para mostrar no retorno
         conn.query(
           "SELECT username FROM users WHERE id = ?",
           [userId],
@@ -403,9 +371,6 @@ module.exports.addBookReview = (req, res) => {
   );
 };
 
-/**
- * DASHBOARD — Retorna livros favoritos e lidos do utilizador autenticado
- */
 module.exports.getUserDashboard = (req, res) => {
   const userId = req.session.loggedUser?.id;
   if (!userId) {
@@ -428,7 +393,6 @@ module.exports.getUserDashboard = (req, res) => {
     WHERE s.user_id = ? AND s.is_read = 1;
   `;
 
-  // primeiro favoritos
   conn.query(sql, [userId], (errFav, favRows) => {
     if (errFav) {
       console.error("❌ Erro ao buscar favoritos:", errFav);
@@ -436,7 +400,6 @@ module.exports.getUserDashboard = (req, res) => {
       return res.json({ message: "db_error" });
     }
 
-    // depois os lidos
     conn.query(sqlRead, [userId], (errRead, readRows) => {
       conn.end();
 
@@ -454,9 +417,6 @@ module.exports.getUserDashboard = (req, res) => {
   });
 };
 
-/**
- * Retorna os 10 utilizadores com login mais recente
- */
 module.exports.getTopRecentLogins = (req, res) => {
   const conn = getConnection();
   const sql = `
@@ -478,9 +438,6 @@ module.exports.getTopRecentLogins = (req, res) => {
   });
 };
 
-/**
- * Retorna os 10 utilizadores com mais livros lidos
- */
 module.exports.getTopReaders = (req, res) => {
   const conn = getConnection();
   const sql = `
@@ -513,7 +470,6 @@ module.exports.addBook = (req, res) => {
 
   const conn = getConnection();
 
-  // obter id do género pelo nome (ou adapta se já envias o id)
   const genreSQL = "SELECT id FROM genres WHERE name = ?";
   conn.query(genreSQL, [genre], (err, rows) => {
     if (err) {
@@ -540,7 +496,6 @@ module.exports.addBook = (req, res) => {
           return res.json({ message: "db_error" });
         }
 
-        // caminho automático: images/<id>.jpg
         const imagePath = `images/${result.insertId}.jpg`;
         const updateSQL = "UPDATE books SET image = ? WHERE id = ?";
 
@@ -558,9 +513,6 @@ module.exports.addBook = (req, res) => {
   });
 };
 
-/**
- * POST - Atualiza livro existente
- */
 module.exports.updateBook = (req, res) => {
   const { id } = req.params;
   const { title, author, isbn, year, genre, description, page_count, editor } = req.body;
@@ -604,19 +556,38 @@ module.exports.updateBook = (req, res) => {
   });
 };
 
-/**
- * POST - Elimina um livro
- */
 module.exports.deleteBook = (req, res) => {
   const { id } = req.params;
   const conn = getConnection();
 
-  conn.query("DELETE FROM books WHERE id = ?", [id], (err) => {
-    conn.end();
-    if (err) {
-      console.error("Erro ao eliminar livro:", err);
+  const sqlDeleteStatus = "DELETE FROM books_users_status WHERE book_id = ?";
+  const sqlDeleteRatings = "DELETE FROM ratings WHERE book_id = ?";
+  const sqlDeleteBook = "DELETE FROM books WHERE id = ?";
+
+  conn.query(sqlDeleteStatus, [id], (err1) => {
+    if (err1) {
+      console.error("Error deleting from books_users_status:", err1);
+      conn.end();
       return res.json({ message: "db_error" });
     }
-    res.json({ message: "ok" });
+
+    conn.query(sqlDeleteRatings, [id], (err2) => {
+      if (err2) {
+        console.error("Error deleting from ratings:", err2);
+        conn.end();
+        return res.json({ message: "db_error" });
+      }
+
+      conn.query(sqlDeleteBook, [id], (err3) => {
+        conn.end();
+        if (err3) {
+          console.error("Error deleting book:", err3);
+          return res.json({ message: "db_error" });
+        }
+
+        console.log(`Book ${id} and all related data successfully deleted.`);
+        res.json({ message: "ok" });
+      });
+    });
   });
 };
